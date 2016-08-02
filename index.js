@@ -137,7 +137,7 @@
         stamp: function (sourceFile, stampFile, destinationFile, shouldFlatten, callback) {
 
             if (typeof shouldFlatten === 'function') {
-                callback = flatten;
+                callback = shouldFlatten;
             }
 
             var flatArg = (shouldFlatten === true) ? " flatten" : "";
