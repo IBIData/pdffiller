@@ -7,8 +7,7 @@
 *                PDF file with the form fields populated.
 */
 (function(){
-    var child_process = require('child_process'),
-        exec = require('child_process').exec,
+    var exec = require('child_process').exec,
         fdf = require('utf8-fdf-generator'),
         _ = require('lodash'),
         fs = require('fs');
@@ -113,7 +112,7 @@
 
             var flatArg = shouldFlatten ? " flatten" : "";
 
-            child_process.exec( "pdftk " + sourceFile + " fill_form " + tempFDF + " output " + destinationFile + flatArg, function (error, stdout, stderr) {
+            exec( "pdftk " + sourceFile + " fill_form " + tempFDF + " output " + destinationFile + flatArg, function (error, stdout, stderr) {
 
                 if ( error ) {
                     console.log('exec error: ' + error);
@@ -133,6 +132,26 @@
 
         fillForm: function( sourceFile, destinationFile, fieldValues, callback) {
             this.fillFormWithFlatten( sourceFile, destinationFile, fieldValues, true, callback);
+        },
+
+        stamp: function (sourceFile, stampFile, destinationFile, shouldFlatten, callback) {
+
+            if (typeof shouldFlatten === 'function') {
+                callback = flatten;
+            }
+
+            var flatArg = (shouldFlatten === true) ? " flatten" : "";
+
+            exec("pdftk " + sourceFile + " stamp " + stampFile + " output " + destinationFile + flatArg, function (err, stdout, stderr) {
+
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback();
+
+            });
+
         }
 
     };
